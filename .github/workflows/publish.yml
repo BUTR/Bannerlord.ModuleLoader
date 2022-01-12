@@ -37,7 +37,7 @@ jobs:
     - name: Run Bannerlord.ModuleLoader
       run: >-
         dotnet restore src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj;
-        msbuild src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj -t:Pack /p:configuration=Release /p:PackageOutputPath="./packages";
+        msbuild src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj -t:Pack /p:configuration=Release /p:PackageOutputPath="./../../packages";
       shell: pwsh
 
     - name: Push to NuGet
