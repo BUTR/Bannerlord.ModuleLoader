@@ -22,15 +22,22 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-latest
+    runs-on: windows-2022
     steps:
     - name: Setup
       uses: butr/actions-common-setup@v2.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Run _build
-      run: dotnet pack src/Bannerlord.ModuleLoader.sln --configuration Release -o "./packages";
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        msbuild-architecture: x64
+
+    - name: Run Bannerlord.ModuleLoader
+      run: >-
+        dotnet restore src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj;
+        msbuild src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj -t:Pack /p:configuration=Release /p:PackageOutputPath="./packages";
       shell: pwsh
 
     - name: Push to NuGet
