@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{374A43C2-209F-47C2-8FD3-81A3FDD7D69F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0A880434-9A10-41FB-AFD1-6AF39032617A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{5E8F3FF1-037F-4CC9-BE5C-6FFBE7D2C139}"
+	ProjectSection(SolutionItems) = preProject
+		..\build\common.props = ..\build\common.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bannerlord.ModuleLoader", "Bannerlord.ModuleLoader\Bannerlord.ModuleLoader.csproj", "{F6746F72-C8F6-4E5A-BAD7-4465E7768A39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{AE4FD8A9-31B7-4E9E-A3FA-68B4787DCFC9}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\dotnet-format-daily.yml = ..\.github\workflows\dotnet-format-daily.yml
+		..\.github\workflows\publish.yml = ..\.github\workflows\publish.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6746F72-C8F6-4E5A-BAD7-4465E7768A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6746F72-C8F6-4E5A-BAD7-4465E7768A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6746F72-C8F6-4E5A-BAD7-4465E7768A39}.Release|Any CPU.ActiveCfg = Release|x64
+		{F6746F72-C8F6-4E5A-BAD7-4465E7768A39}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0A880434-9A10-41FB-AFD1-6AF39032617A} = {374A43C2-209F-47C2-8FD3-81A3FDD7D69F}
+		{5E8F3FF1-037F-4CC9-BE5C-6FFBE7D2C139} = {374A43C2-209F-47C2-8FD3-81A3FDD7D69F}
+		{F6746F72-C8F6-4E5A-BAD7-4465E7768A39} = {0A880434-9A10-41FB-AFD1-6AF39032617A}
+		{AE4FD8A9-31B7-4E9E-A3FA-68B4787DCFC9} = {374A43C2-209F-47C2-8FD3-81A3FDD7D69F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {827F528D-7EB7-4B7C-8188-1F6A6D9DF9CD}
+	EndGlobalSection
+EndGlobal
