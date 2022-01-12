@@ -41,7 +41,7 @@ jobs:
       shell: pwsh
 
     - name: Push to NuGet
-      run: dotnet nuget push "./packages/*.nupkg" -k ${{secrets.NUGET_API_KEY}} -s https://www.nuget.org
+      run: dotnet nuget push "packages/**/*.nupkg" -k ${{secrets.NUGET_API_KEY}} -s https://www.nuget.org
       shell: pwsh
 
     - name: Push to GPR
