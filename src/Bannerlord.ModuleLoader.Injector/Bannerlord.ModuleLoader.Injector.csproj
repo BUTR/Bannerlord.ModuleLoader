@@ -25,19 +25,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+    <!-- Including Mono.Cecil as a package breaks the analyzer because of mscorlib -->
+    <!-- ILRepack breaks because of Microsoft.CodeAnalysis quirks -->
+    <!-- This is the best workaround -->
+    <!--<Compile Include="..\cecil\ProjectInfo.cs" />-->
+    <Compile Include="..\cecil\Mono\*.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Cecil\*.cs" Exclude="..\cecil\Mono.Cecil\AssemblyInfo.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Cecil.Cil\*.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Cecil.Metadata\*.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Cecil.PE\*.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Collections.Generic\*.cs" Visible="false" />
+    <Compile Include="..\cecil\Mono.Security.Cryptography\*.cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" PrivateAssets="all" GeneratePathProperty="true"  />
-    <None Include="$(PkgMono_Cecil)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgMono_Cecil)\lib\netstandard2.0\*.pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" ExcludeAssets="runtime" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" Visible="false" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,7 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
+
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>

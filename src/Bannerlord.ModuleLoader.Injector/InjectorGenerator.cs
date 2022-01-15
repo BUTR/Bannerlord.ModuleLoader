@@ -2,7 +2,6 @@
 
 using Mono.Cecil;
 
-using System;
 using System.IO;
 using System.Linq;
 
@@ -34,7 +33,7 @@ namespace Bannerlord.ModuleLoader.Injector
             using (var newAsmStream = SetName(name, dllStream))
             using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.dll"), FileMode.Create, FileAccess.Write))
             {
-                newAsmStream?.CopyTo(fileStream);
+                newAsmStream.CopyTo(fileStream);
             }
 
             using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb"))
@@ -44,7 +43,7 @@ namespace Bannerlord.ModuleLoader.Injector
             }
         }
 
-        private static Stream SetName(string name, Stream? assemblyStream)
+        public static Stream SetName(string name, Stream? assemblyStream)
         {
             if (assemblyStream is null)
                 return Stream.Null;

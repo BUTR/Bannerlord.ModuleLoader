@@ -1,0 +1,4 @@
+[submodule "src/cecil"]
+	path = src/cecil
+	url = https://github.com/jbevain/cecil
+	branch = master
