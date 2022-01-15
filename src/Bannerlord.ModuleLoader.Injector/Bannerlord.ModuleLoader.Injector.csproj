@@ -16,6 +16,7 @@
     <Description>Module Loader Injector for Bannerlord.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/BUTR/Bannerlord.Bannerlord.ModuleLoader</PackageProjectUrl>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <!--
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/BUTR/Bannerlord.ModuleLoader/master/assets/Icon128x128.png</PackageIconUrl>
@@ -28,8 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true"  />
+    <PackageReference Include="Mono.Cecil" Version="0.11.1" PrivateAssets="all" GeneratePathProperty="true"  />
     <None Include="$(PkgMono_Cecil)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgMono_Cecil)\lib\netstandard2.0\*.pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,11 +45,10 @@
     <None Remove="build\Bannerlord.ModuleLoader.Injector.props" />
     <Content Include="buildMultiTargeting\Bannerlord.ModuleLoader.Injector.props" PackagePath="%(Identity)" Pack="true" Visible="true" />
     <Content Include="build\Bannerlord.ModuleLoader.Injector.props" PackagePath="%(Identity)" Pack="true" Visible="true" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
 
-    <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" />
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
