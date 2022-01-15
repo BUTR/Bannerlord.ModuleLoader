@@ -63,7 +63,7 @@ jobs:
         github-token: ${{secrets.GITHUB_TOKEN}}
 
     - name: Run Bannerlord.ModuleLoader
-      run: dotnet pack src/Bannerlord.ModuleLoader.Injector/Bannerlord.ModuleLoader.Injector.csproj;
+      run: dotnet pack src/Bannerlord.ModuleLoader.Injector/Bannerlord.ModuleLoader.Injector.csproj --configuration Release -o "./packages";
       shell: pwsh
 
     - name: Push to NuGet
