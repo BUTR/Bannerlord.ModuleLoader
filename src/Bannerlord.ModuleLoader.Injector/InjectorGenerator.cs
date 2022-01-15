@@ -24,7 +24,7 @@ namespace Bannerlord.ModuleLoader.Injector
                 ? $"{moduleName}.Loader"
                 : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.Loader";
 
-            var resourceBase = "Bannerlord.ModuleLoader.Generator.Bannerlord.ModuleLoader";
+            var resourceBase = $"{typeof(InjectorGenerator).Namespace}.Bannerlord.ModuleLoader";
 
             using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream($"{resourceBase}.dll"))
             using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.dll"), FileMode.Create, FileAccess.Write))
