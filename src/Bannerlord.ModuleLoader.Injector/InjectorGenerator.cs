@@ -1,5 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 
+using Mono.Cecil;
+
+using System;
 using System.IO;
 using System.Linq;
 
@@ -28,9 +31,10 @@ namespace Bannerlord.ModuleLoader.Injector
                 : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.Loader";
 
             using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll"))
+            using (var newAsmStream = SetName(name, dllStream))
             using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.dll"), FileMode.Create, FileAccess.Write))
             {
-                dllStream?.CopyTo(fileStream);
+                newAsmStream?.CopyTo(fileStream);
             }
 
             using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb"))
@@ -38,6 +42,19 @@ namespace Bannerlord.ModuleLoader.Injector
             {
                 pdbStream?.CopyTo(fileStream);
             }
+        }
+
+        private static Stream SetName(string name, Stream? assemblyStream)
+        {
+            if (assemblyStream is null)
+                return Stream.Null;
+
+            using var modifiedAss = AssemblyDefinition.ReadAssembly(assemblyStream);
+            modifiedAss.Name.Name = name;
+
+            var ms = new MemoryStream();
+            modifiedAss.Write(ms);
+            return ms;
         }
     }
 }

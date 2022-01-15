@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +36,7 @@
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
     <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
+
     <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" />
     <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" />
   </ItemGroup>
