@@ -50,6 +50,17 @@ namespace Bannerlord.ModuleLoader.Injector
 
             using var modifiedAss = AssemblyDefinition.ReadAssembly(assemblyStream);
             modifiedAss.Name.Name = name;
+            modifiedAss.MainModule.Name = name;
+            foreach (var attribute in modifiedAss.CustomAttributes)
+            {
+                switch (attribute.AttributeType.Name)
+                {
+                    case "AssemblyTitleAttribute":
+                    case "AssemblyProductAttribute":
+                        attribute.ConstructorArguments[0] = new CustomAttributeArgument(modifiedAss.MainModule.TypeSystem.String, name);
+                        break;
+                }
+            }
 
             var ms = new MemoryStream();
             modifiedAss.Write(ms);
