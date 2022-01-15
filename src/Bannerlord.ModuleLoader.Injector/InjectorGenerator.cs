@@ -13,10 +13,13 @@ namespace Bannerlord.ModuleLoader.Injector
         public void Execute(GeneratorExecutionContext context)
         {
             if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.outputpath", out var path))
+            {
                 return;
-
+            }
             if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.msbuildprojectfullpath", out var csPath))
+            {
                 return;
+            }
 
             var fullPath = Path.Combine(Path.GetDirectoryName(csPath), path);
 
@@ -24,15 +27,13 @@ namespace Bannerlord.ModuleLoader.Injector
                 ? $"{moduleName}.Loader"
                 : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.Loader";
 
-            var resourceBase = $"{typeof(InjectorGenerator).Namespace}.Bannerlord.ModuleLoader";
-
-            using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream($"{resourceBase}.dll"))
+            using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll"))
             using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.dll"), FileMode.Create, FileAccess.Write))
             {
                 dllStream?.CopyTo(fileStream);
             }
 
-            using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream($"{resourceBase}.pdb"))
+            using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb"))
             using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.pdb"), FileMode.Create, FileAccess.Write))
             {
                 pdbStream?.CopyTo(fileStream);

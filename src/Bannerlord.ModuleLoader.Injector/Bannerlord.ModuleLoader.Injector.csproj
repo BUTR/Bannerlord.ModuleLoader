@@ -35,8 +35,8 @@
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
     <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\*.dll" />
-    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\*.pdb" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.dll" LogicalName="Bannerlord.ModuleLoader.dll" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\Bannerlord.ModuleLoader.pdb" LogicalName="Bannerlord.ModuleLoader.pdb" />
   </ItemGroup>
 
 </Project>
