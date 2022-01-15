@@ -43,7 +43,7 @@ namespace Bannerlord.ModuleLoader.Injector
             }
         }
 
-        public static Stream SetName(string name, Stream? assemblyStream)
+        private static Stream SetName(string name, Stream? assemblyStream)
         {
             if (assemblyStream is null)
                 return Stream.Null;
@@ -53,6 +53,7 @@ namespace Bannerlord.ModuleLoader.Injector
 
             var ms = new MemoryStream();
             modifiedAss.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }
     }
