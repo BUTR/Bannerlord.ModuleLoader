@@ -26,8 +26,8 @@ namespace Bannerlord.ModuleLoader.Injector
             var fullPath = Path.Combine(Path.GetDirectoryName(csPath), path);
 
             var name = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.modulename", out var moduleName)
-                ? $"{moduleName}.Loader"
-                : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.Loader";
+                ? $"{moduleName}.ModuleLoader"
+                : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.ModuleLoader";
 
             using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll"))
             using (var newAsmStream = SetName(name, dllStream))
