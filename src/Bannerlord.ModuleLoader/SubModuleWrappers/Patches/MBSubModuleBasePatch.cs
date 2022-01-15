@@ -100,7 +100,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     __result = wrapper.DoLoading(game);
                     break;
                 case MBSubModuleBaseListWrapper listWrapper:
-                    __result =  listWrapper.DoLoading(game);
+                    __result = listWrapper.DoLoading(game);
                     break;
             }
         }
