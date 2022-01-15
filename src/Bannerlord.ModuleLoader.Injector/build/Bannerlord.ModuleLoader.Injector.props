@@ -1,0 +1,9 @@
+<Project>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="ModuleName" />
+    <CompilerVisibleProperty Include="MSBuildProjectFullPath" />
+    <CompilerVisibleProperty Include="OutputPath" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Authors>BUTR</Authors>
+
+    <!-- Do not include the generator as a lib dependency -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Bannerlord.ModuleLoader.Injector</PackageId>
+    <Title>Bannerlord.ModuleLoader.Injector</Title>
+    <Description>Module Loader Injector for Bannerlord.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BUTR/Bannerlord.Bannerlord.ModuleLoader</PackageProjectUrl>
+    <!--
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://raw.githubusercontent.com/BUTR/Bannerlord.ModuleLoader/master/assets/Icon128x128.png</PackageIconUrl>
+    -->
+    <PackageTags>butr bannerlord moduleloader injector</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="buildMultiTargeting\Bannerlord.ModuleLoader.Injector.props" />
+    <None Remove="build\Bannerlord.ModuleLoader.Injector.props" />
+    <Content Include="buildMultiTargeting\Bannerlord.ModuleLoader.Injector.props" PackagePath="%(Identity)" Pack="true" Visible="true" />
+    <Content Include="build\Bannerlord.ModuleLoader.Injector.props" PackagePath="%(Identity)" Pack="true" Visible="true" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <PackageReference Include="Bannerlord.ModuleLoader" Version="$(Version)" PrivateAssets="all" GeneratePathProperty="true" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\*.dll" />
+    <EmbeddedResource Include="$(PKGBannerlord_ModuleLoader)\lib\net472\*.pdb" />
+  </ItemGroup>
+
+</Project>
