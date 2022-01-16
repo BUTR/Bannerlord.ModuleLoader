@@ -34,7 +34,7 @@ Each build will create `Bannerlord.ModuleLoader.$(ModuleName).dll|.pdb` files.
 ```
 
 > **ℹ️ NOTE**  
-> The `$modulename$` property if from BUTR's [Bannerlord.BuildResources](https://github.com/BUTR/Bannerlord.BuildResources), it injects MSBuild's $(ModuleName) property.
+> The `$modulename$` property is from BUTR's [Bannerlord.BuildResources](https://github.com/BUTR/Bannerlord.BuildResources), it injects MSBuild's $(ModuleName) property.
 
 > **⚠️ ATTENTION**  
 > If the Module Id contains invalid C# identity symbols (like dot '.'), override the `SubModuleClassType` property manually, replacing each invalid char as underscore `_`.
