@@ -12,7 +12,7 @@
 Uses the new C# 9 Source Generator (could have used an MSBuild task) to generate a loader library for the implementation-loader technique.  
 
 ### Requirements
-Requires the `ModuleName MSBuild property widely used in our BUTR stack. Should be the same as the mod's Module Id.  
+Requires the `ModuleName` MSBuild property widely used in our BUTR stack. Should be the same as the mod's Module Id.  
 Requires standard `MSBuildProjectFullPath` and `OutputPath` properties. Tampering with them will break the injector.  
 
 ### Installation
@@ -33,8 +33,8 @@ Each build will create `Bannerlord.ModuleLoader.$(ModuleName).dll|.pdb` files.
     </SubModule>
 ```
 
-> **ℹ️ INFO** 
+> **ℹ️ NOTE**  
 > The `$modulename$` property if from BUTR's [Bannerlord.BuildResources](https://github.com/BUTR/Bannerlord.BuildResources), it injects MSBuild's $(ModuleName) property.
 
-> **⚠️ WARNING**  
+> **⚠️ ATTENTION**  
 > If the Module Id contains invalid C# identity symbols (like dot '.'), override the `SubModuleClassType` property manually, replacing each invalid char as underscore `_`.
