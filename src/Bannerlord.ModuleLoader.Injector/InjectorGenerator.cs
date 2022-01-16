@@ -25,45 +25,38 @@ namespace Bannerlord.ModuleLoader.Injector
 
             var fullPath = Path.Combine(Path.GetDirectoryName(csPath), path);
 
-            var name = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.modulename", out var moduleName)
-                ? $"{moduleName}.ModuleLoader"
-                : $"{context.Compilation.Assembly.Name.Split('.').FirstOrDefault()}.ModuleLoader";
+            var moduleName = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.modulename", out var moduleNameStr)
+                ? moduleNameStr
+                : context.Compilation.Assembly.Name.Split('.').FirstOrDefault();
 
             using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll"))
-            using (var newAsmStream = SetName(name, dllStream))
-            using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.dll"), FileMode.Create, FileAccess.Write))
+            using (var newAsmStream = SetName(moduleName, dllStream))
+            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleName}.dll"), FileMode.Create, FileAccess.Write))
             {
                 newAsmStream.CopyTo(fileStream);
             }
 
             using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb"))
-            using (var fileStream = new FileStream(Path.Combine(fullPath, $"{name}.pdb"), FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleName}.pdb"), FileMode.Create, FileAccess.Write))
             {
                 pdbStream?.CopyTo(fileStream);
             }
         }
 
-        private static Stream SetName(string name, Stream? assemblyStream)
+        private static Stream SetName(string moduleName, Stream? assemblyStream)
         {
             if (assemblyStream is null)
                 return Stream.Null;
 
+            assemblyStream.Seek(0, SeekOrigin.Begin);
+
             using var modifiedAss = AssemblyDefinition.ReadAssembly(assemblyStream);
-            modifiedAss.Name.Name = name;
-            modifiedAss.MainModule.Name = name;
-            foreach (var attribute in modifiedAss.CustomAttributes)
-            {
-                switch (attribute.AttributeType.Name)
-                {
-                    case "AssemblyTitleAttribute":
-                    case "AssemblyProductAttribute":
-                        attribute.ConstructorArguments[0] = new CustomAttributeArgument(modifiedAss.MainModule.TypeSystem.String, name);
-                        break;
-                }
-            }
+            modifiedAss.Name.Name = moduleName;
+            var type = modifiedAss.MainModule.GetType("Bannerlord.ModuleLoader.SubModule");
+            type.Name = moduleName;
 
             var ms = new MemoryStream();
-            modifiedAss.Write(ms);
+            modifiedAss.Write(ms, new WriterParameters() { DeterministicMvid = true });
             ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }

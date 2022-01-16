@@ -13,13 +13,15 @@ namespace Bannerlord.ModuleLoader
 {
     public sealed class SubModule : MBSubModuleBaseListWrapper
     {
-        private static readonly ModuleInfoExtended? ModuleInfo = ModuleInfoHelper.GetModuleByType(typeof(SubModule));
-        private readonly Harmony _harmonyWrappers = new(ModuleInfo?.Id ?? "Bannerlord.ModuleLoader ERROR");
+        private readonly ModuleInfoExtended? ModuleInfo;
+        private readonly Harmony _harmonyWrappers;
 
         private bool ServiceRegistrationWasCalled { get; set; }
 
         public SubModule()
         {
+            ModuleInfo = ModuleInfoHelper.GetModuleByType(typeof(LoaderHelper));
+            _harmonyWrappers = new(ModuleInfo?.Id ?? "Bannerlord.ModuleLoader ERROR");
             _ = MBSubModuleBasePatch.Enable(_harmonyWrappers);
         }
 
@@ -64,7 +66,9 @@ namespace Bannerlord.ModuleLoader
                 return;
             }
 
-            _subModules.AddRange(LoaderHelper.LoadAllImplementations(filter).Select(x => new MBSubModuleBaseWrapper(x)).ToList());
+            var implementations = LoaderHelper.LoadAllImplementations(filter).ToList();
+            var wrapped = implementations.Select(x => new MBSubModuleBaseWrapper(x)).ToList();
+            _subModules.AddRange(wrapped);
         }
     }
 }
