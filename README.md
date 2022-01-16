@@ -34,7 +34,7 @@ Each build will create `Bannerlord.ModuleLoader.$(ModuleName).dll|.pdb` files.
 ```
 
 > **ℹ️ NOTE**  
-> The `$modulename$` property is from BUTR's [Bannerlord.BuildResources](https://github.com/BUTR/Bannerlord.BuildResources), it injects MSBuild's $(ModuleName) property.
+> The `$modulename$` property is from BUTR's [Bannerlord.BuildResources](https://github.com/BUTR/Bannerlord.BuildResources), it injects MSBuild's $(ModuleName) property.  
 > Just replace it with the actual Module Id if you don't use the package!
 
 > **⚠️ ATTENTION**  
