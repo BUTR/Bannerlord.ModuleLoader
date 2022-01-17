@@ -3,7 +3,7 @@
 
   <!--Development Variables-->
   <PropertyGroup>
-    <GITHUB_RUN_NUMBER Condition="$(GITHUB_RUN_NUMBER) == ''">0</GITHUB_RUN_NUMBER>
+    <GITHUB_RUN_NUMBER Condition="$(GITHUB_RUN_NUMBER) == ''">1.0.1.20</GITHUB_RUN_NUMBER>
     <Version>1.0.1.$(GITHUB_RUN_NUMBER)</Version>
 
     <GameVersion>1.1.0</GameVersion>
