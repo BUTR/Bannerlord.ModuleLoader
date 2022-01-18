@@ -41,10 +41,10 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
             foreach (var subModule in SubModules)
                 subModule.OnGameStart(game, gameStarterObject);
         }
-        public new virtual void OnInitializeGameStarter(Game game, IGameStarter starterObject)
+        public new virtual void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             foreach (var subModule in SubModules)
-                subModule.OnInitializeGameStarter(game, starterObject);
+                subModule.InitializeGameStarter(game, starterObject);
         }
 
         public virtual void OnServiceRegistration()

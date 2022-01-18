@@ -103,7 +103,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         public new virtual void OnApplicationTick(float dt) => OnApplicationTickInstance?.Invoke(dt);
         public new virtual void OnBeforeInitialModuleScreenSetAsRoot() => OnBeforeInitialModuleScreenSetAsRootInstance?.Invoke();
         public new virtual void OnGameStart(Game game, IGameStarter gameStarterObject) => OnGameStartInstance?.Invoke(game, gameStarterObject);
-        public new virtual void OnInitializeGameStarter(Game game, IGameStarter starterObject) => InitializeGameStarterInstance?.Invoke(game, starterObject);
+        public new virtual void InitializeGameStarter(Game game, IGameStarter starterObject) => InitializeGameStarterInstance?.Invoke(game, starterObject);
 
         public new virtual void OnServiceRegistration() => OnServiceRegistrationInstance?.Invoke();
 

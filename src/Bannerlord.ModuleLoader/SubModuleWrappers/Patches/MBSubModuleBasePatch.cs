@@ -68,15 +68,15 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     break;
             }
         }
-        private static void OnInitializeGameStarterPostfix(MBSubModuleBase __instance, Game game, IGameStarter starterObject)
+        private static void InitializeGameStarterPostfix(MBSubModuleBase __instance, Game game, IGameStarter starterObject)
         {
             switch (__instance)
             {
                 case MBSubModuleBaseWrapper wrapper:
-                    wrapper.OnInitializeGameStarter(game, starterObject);
+                    wrapper.InitializeGameStarter(game, starterObject);
                     break;
                 case MBSubModuleBaseListWrapper listWrapper:
-                    listWrapper.OnInitializeGameStarter(game, starterObject);
+                    listWrapper.InitializeGameStarter(game, starterObject);
                     break;
             }
         }
@@ -293,8 +293,8 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnGameStart)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnGameStartPostfix)))
                 & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnInitializeGameStarter)),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnInitializeGameStarterPostfix)))
+                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.InitializeGameStarter)),
+                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(InitializeGameStarterPostfix)))
 
                 & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnServiceRegistration)),
