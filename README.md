@@ -1,4 +1,4 @@
-﻿## Bannerlord.ModuleLoader
+# Bannerlord.ModuleLoader
 
 <p align="center">
   <a href="https://www.nuget.org/packages/Bannerlord.ModuleLoader" alt="NuGet Harmony">
@@ -11,14 +11,14 @@
 
 Uses the new C# 9 Source Generator (could have used an MSBuild task) to generate a loader library for the implementation-loader technique.  
 
-### Requirements
+## Requirements
 Requires the `ModuleName` MSBuild property widely used in our BUTR stack. Should be the same as the mod's Module Id.  
 Requires standard `MSBuildProjectFullPath` and `OutputPath` properties. Tampering with them will break the injector.  
 
-### Installation
+## Installation
 Install the [Bannerlord.ModuleLoader.Injector](https://github.com/BUTR/Bannerlord.ModuleLoader.Injector) package.
 
-### Usage
+## Usage
 Each build will create `Bannerlord.ModuleLoader.$(ModuleName).dll|.pdb` files.  
 
 ```xml
