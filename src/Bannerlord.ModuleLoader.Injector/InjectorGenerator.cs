@@ -26,19 +26,21 @@ namespace Bannerlord.ModuleLoader.Injector
 
             var fullPath = Path.Combine(Path.GetDirectoryName(csPath), path);
 
-            var moduleName = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.modulename", out var moduleNameStr)
-                ? moduleNameStr
-                : context.Compilation.Assembly.Name.Split('.').FirstOrDefault();
+            var moduleId = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.moduleid", out var moduleIdStr)
+                ? moduleIdStr
+                : context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.modulename", out var moduleNameStr)
+                    ? moduleNameStr
+                    : context.Compilation.Assembly.Name.Split('.').FirstOrDefault();
 
             using (var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll"))
-            using (var newAsmStream = SetName(moduleName, dllStream))
-            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleName}.dll"), FileMode.Create, FileAccess.Write))
+            using (var newAsmStream = SetName(moduleId, dllStream))
+            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.dll"), FileMode.Create, FileAccess.Write))
             {
                 newAsmStream.CopyTo(fileStream);
             }
 
             using (var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb"))
-            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleName}.pdb"), FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.pdb"), FileMode.Create, FileAccess.Write))
             {
                 pdbStream?.CopyTo(fileStream);
             }
