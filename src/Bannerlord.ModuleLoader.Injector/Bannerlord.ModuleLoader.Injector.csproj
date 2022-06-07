@@ -15,7 +15,7 @@
     <Title>Bannerlord.ModuleLoader.Injector</Title>
     <Description>Module Loader Injector for Bannerlord.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/BUTR/Bannerlord.Bannerlord.ModuleLoader</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/BUTR/Bannerlord.ModuleLoader</PackageProjectUrl>
     <DevelopmentDependency>true</DevelopmentDependency>
     <!--
     <PackageIcon>icon.png</PackageIcon>
