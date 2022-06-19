@@ -36,6 +36,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         private delegate void OnBeforeMissionBehaviourInitializeDelegate(Mission mission);
         private delegate void OnMissionBehaviourInitializeDelegate(Mission mission);
         private delegate void OnInitialStateDelegate();
+        private delegate void AfterAsyncTickTickDelegate(float dt);
 
 
         private OnSubModuleLoadDelegate? OnSubModuleLoadInstance { get; }
@@ -62,6 +63,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         private OnBeforeMissionBehaviourInitializeDelegate? OnBeforeMissionBehaviourInitializeInstance { get; }
         private OnMissionBehaviourInitializeDelegate? OnMissionBehaviourInitializeInstance { get; }
         private OnInitialStateDelegate? OnInitialStateInstance { get; }
+        private AfterAsyncTickTickDelegate? AfterAsyncTickTickInstance { get; }
 
 
         public MBSubModuleBase SubModule { get; }
@@ -96,6 +98,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
             OnMissionBehaviourInitializeInstance = AccessTools2.GetDelegate<OnMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, "OnMissionBehaviorInitialize")
                                                   ?? AccessTools2.GetDelegate<OnMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, "OnMissionBehaviourInitialize");
             OnInitialStateInstance = AccessTools2.GetDelegate<OnInitialStateDelegate, MBSubModuleBase>(subModule, "OnInitialState");
+            AfterAsyncTickTickInstance = AccessTools2.GetDelegate<AfterAsyncTickTickDelegate, MBSubModuleBase>(subModule, "AfterAsyncTickTick");
         }
 
         public new virtual void OnSubModuleLoad() => OnSubModuleLoadInstance?.Invoke();
@@ -122,6 +125,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         public new virtual void OnAfterGameInitializationFinished(Game game, object starterObject) => OnAfterGameInitializationFinishedInstance?.Invoke(game, starterObject);
         public new virtual void OnConfigChanged() => OnConfigChangedInstance?.Invoke();
         public new virtual void OnInitialState() => OnInitialStateInstance?.Invoke();
+        public new virtual void AfterAsyncTickTick(float dt) => AfterAsyncTickTickInstance?.Invoke(dt);
     }
 #pragma warning restore CS0109 // ReSharper restore VirtualMemberNeverOverridden.Global
 }

@@ -272,6 +272,18 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     break;
             }
         }
+        private static void AfterAsyncTickTickPostfix(MBSubModuleBase __instance, float dt)
+        {
+            switch (__instance)
+            {
+                case MBSubModuleBaseWrapper wrapper:
+                    wrapper.AfterAsyncTickTick(dt);
+                    break;
+                case MBSubModuleBaseListWrapper listWrapper:
+                    listWrapper.AfterAsyncTickTick(dt);
+                    break;
+            }
+        }
 
         internal static bool Enable(Harmony harmony)
         {
@@ -353,7 +365,10 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnConfigChangedPostfix)))
                 & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnInitialState)),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnInitialStatePostfix)));
+                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnInitialStatePostfix)))
+                & harmony.TryPatch(
+                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.AfterAsyncTickTick)),
+                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(AfterAsyncTickTickPostfix)));
 #pragma warning restore format // @formatter:on
         }
     }

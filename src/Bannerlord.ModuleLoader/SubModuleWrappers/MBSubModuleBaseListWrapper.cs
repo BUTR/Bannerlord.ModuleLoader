@@ -13,7 +13,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
     /// </summary>
     public class MBSubModuleBaseListWrapper : MBSubModuleBase
     {
-        protected List<MBSubModuleBaseWrapper> _subModules = new();
+        protected readonly List<MBSubModuleBaseWrapper> _subModules = new();
         public IReadOnlyList<MBSubModuleBaseWrapper> SubModules => _subModules.AsReadOnly();
 
         public new virtual void OnSubModuleLoad()
@@ -126,6 +126,12 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         {
             foreach (var subModule in SubModules)
                 subModule.OnInitialState();
+        }
+        
+        public new virtual void AfterAsyncTickTick(float dt)
+        {
+            foreach (var subModule in SubModules)
+                subModule.AfterAsyncTickTick(dt);
         }
     }
 #pragma warning restore CS0109 // ReSharper restore VirtualMemberNeverOverridden.Global
