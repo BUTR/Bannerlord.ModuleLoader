@@ -133,6 +133,7 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
             foreach (var subModule in SubModules)
                 subModule.AfterAsyncTickTick(dt);
         }
+
     }
 #pragma warning restore CS0109 // ReSharper restore VirtualMemberNeverOverridden.Global
 }

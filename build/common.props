@@ -6,17 +6,15 @@
     <GITHUB_RUN_NUMBER Condition="$(GITHUB_RUN_NUMBER) == ''">0</GITHUB_RUN_NUMBER>
     <Version>1.0.1.$(GITHUB_RUN_NUMBER)</Version>
 
-    <GameVersion>1.1.0</GameVersion>
+    <GameVersion>1.0.0</GameVersion>
     <!--Harmony Version-->
-    <HarmonyVersion>2.1.1</HarmonyVersion>
-    <!--ButterLib Version-->
-    <ButterLibVersion>1.0.31</ButterLibVersion>
+    <HarmonyVersion>2.2.2</HarmonyVersion>
     <!--BUTRShared Version-->
-    <BUTRSharedVersion>2.0.0.86</BUTRSharedVersion>
+    <BUTRSharedVersion>3.0.0.118</BUTRSharedVersion>
     <!--ModuleManager Version-->
-    <BUTRModuleManagerVersion>3.0.97</BUTRModuleManagerVersion>
+    <BUTRModuleManagerVersion>4.0.149</BUTRModuleManagerVersion>
     <!--Harmony Extensions Version-->
-    <HarmonyExtensionsVersion>3.1.0.61</HarmonyExtensionsVersion>
+    <HarmonyExtensionsVersion>3.1.0.67</HarmonyExtensionsVersion>
   </PropertyGroup>
 
 

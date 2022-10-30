@@ -334,14 +334,8 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnBeforeMissionBehaviourInitialize)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnBeforeMissionBehaviourInitializePostfix)))
                 & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), "OnBeforeMissionBehaviorInitialize"),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnBeforeMissionBehaviourInitializePostfix)))
-                & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnBeforeMissionBehaviourInitialize)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnBeforeMissionBehaviourInitializePostfix)))
-                & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), "OnMissionBehaviorInitialize"),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnMissionBehaviourInitializePostfix)))
                 & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnMissionBehaviourInitialize)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnMissionBehaviourInitializePostfix)))
