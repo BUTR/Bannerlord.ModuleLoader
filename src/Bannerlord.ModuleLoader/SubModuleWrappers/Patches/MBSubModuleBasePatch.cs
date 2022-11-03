@@ -169,10 +169,10 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
             switch (__instance)
             {
                 case MBSubModuleBaseWrapper wrapper:
-                    wrapper.OnBeforeMissionBehaviourInitialize(mission);
+                    wrapper.OnBeforeMissionBehaviorInitialize(mission);
                     break;
                 case MBSubModuleBaseListWrapper listWrapper:
-                    listWrapper.OnBeforeMissionBehaviourInitialize(mission);
+                    listWrapper.OnBeforeMissionBehaviorInitialize(mission);
                     break;
             }
         }
@@ -181,10 +181,10 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
             switch (__instance)
             {
                 case MBSubModuleBaseWrapper wrapper:
-                    wrapper.OnMissionBehaviourInitialize(mission);
+                    wrapper.OnMissionBehaviorInitialize(mission);
                     break;
                 case MBSubModuleBaseListWrapper listWrapper:
-                    listWrapper.OnMissionBehaviourInitialize(mission);
+                    listWrapper.OnMissionBehaviorInitialize(mission);
                     break;
             }
         }
@@ -331,13 +331,10 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnGameInitializationFinished)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnGameInitializationFinishedPostfix)))
                 & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnBeforeMissionBehaviourInitialize)),
+                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnBeforeMissionBehaviorInitialize)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnBeforeMissionBehaviourInitializePostfix)))
                 & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnBeforeMissionBehaviourInitialize)),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnBeforeMissionBehaviourInitializePostfix)))
-                & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnMissionBehaviourInitialize)),
+                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnMissionBehaviorInitialize)),
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnMissionBehaviourInitializePostfix)))
                 & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnMultiplayerGameStart)),

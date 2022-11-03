@@ -93,8 +93,8 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
             OnAfterGameInitializationFinishedInstance = AccessTools2.GetDelegate<OnAfterGameInitializationFinishedDelegate, MBSubModuleBase>(subModule, nameof(OnAfterGameInitializationFinished));
             DoLoadingInstance = AccessTools2.GetDelegate<DoLoadingDelegate, MBSubModuleBase>(subModule, nameof(DoLoading));
             OnGameEndInstance = AccessTools2.GetDelegate<OnGameEndDelegate, MBSubModuleBase>(subModule, nameof(OnGameEnd));
-            OnBeforeMissionBehaviourInitializeInstance = AccessTools2.GetDelegate<OnBeforeMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, nameof(OnBeforeMissionBehaviourInitialize));
-            OnMissionBehaviourInitializeInstance = AccessTools2.GetDelegate<OnMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, nameof(OnMissionBehaviourInitialize));
+            OnBeforeMissionBehaviourInitializeInstance = AccessTools2.GetDelegate<OnBeforeMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, nameof(OnBeforeMissionBehaviorInitialize));
+            OnMissionBehaviourInitializeInstance = AccessTools2.GetDelegate<OnMissionBehaviourInitializeDelegate, MBSubModuleBase>(subModule, nameof(OnMissionBehaviorInitialize));
             OnInitialStateInstance = AccessTools2.GetDelegate<OnInitialStateDelegate, MBSubModuleBase>(subModule, nameof(OnInitialState));
             AfterAsyncTickTickInstance = AccessTools2.GetDelegate<AfterAsyncTickTickDelegate, MBSubModuleBase>(subModule, nameof(AfterAsyncTickTick));
         }
@@ -114,8 +114,8 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers
         public new virtual void BeginGameStart(Game game) => BeginGameStartInstance?.Invoke(game);
         public new virtual void OnGameEnd(Game game) => OnGameEndInstance?.Invoke(game);
         public new virtual void OnGameInitializationFinished(Game game) => OnGameInitializationFinishedInstance?.Invoke(game);
-        public new virtual void OnBeforeMissionBehaviourInitialize(Mission mission) => OnBeforeMissionBehaviourInitializeInstance?.Invoke(mission);
-        public new virtual void OnMissionBehaviourInitialize(Mission mission) => OnMissionBehaviourInitializeInstance?.Invoke(mission);
+        public new virtual void OnBeforeMissionBehaviorInitialize(Mission mission) => OnBeforeMissionBehaviourInitializeInstance?.Invoke(mission);
+        public new virtual void OnMissionBehaviorInitialize(Mission mission) => OnMissionBehaviourInitializeInstance?.Invoke(mission);
         public new virtual void OnMultiplayerGameStart(Game game, object starterObject) => OnMultiplayerGameStartInstance?.Invoke(game, starterObject);
         public new virtual void OnNewGameCreated(Game game, object initializerObject) => OnNewGameCreatedInstance?.Invoke(game, initializerObject);
         public new virtual void RegisterSubModuleObjects(bool isSavedCampaign) => RegisterSubModuleObjectsInstance?.Invoke(isSavedCampaign);
