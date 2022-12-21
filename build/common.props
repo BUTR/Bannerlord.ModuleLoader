@@ -12,7 +12,7 @@
     <!--BUTRShared Version-->
     <BUTRSharedVersion>3.0.0.118</BUTRSharedVersion>
     <!--ModuleManager Version-->
-    <BUTRModuleManagerVersion>4.0.149</BUTRModuleManagerVersion>
+    <BUTRModuleManagerVersion>5.0.163</BUTRModuleManagerVersion>
     <!--Harmony Extensions Version-->
     <HarmonyExtensionsVersion>3.1.0.67</HarmonyExtensionsVersion>
   </PropertyGroup>
