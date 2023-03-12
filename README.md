@@ -12,8 +12,9 @@
 Uses the new C# 9 Source Generator (could have used an MSBuild task) to generate a loader library for the implementation-loader technique.  
 
 ## Requirements
-Requires the `ModuleId` and `ModuleName` MSBuild property widely used in our BUTR stack. Should be the same as the mod's Module Id and Name.  
-Requires standard `MSBuildProjectFullPath` and `OutputPath` properties. Tampering with them will break the injector.  
+* Will add a requirement to the `Bannerlord.Harmony` module.
+* Requires the `ModuleId` and `ModuleName` MSBuild property widely used in our BUTR stack. Should be the same as the mod's Module Id and Name.  
+* Requires standard `MSBuildProjectFullPath` and `OutputPath` properties. Tampering with them will break the injector.  
 
 ## Installation
 Install the [Bannerlord.ModuleLoader.Injector](https://github.com/BUTR/Bannerlord.ModuleLoader.Injector) package.
