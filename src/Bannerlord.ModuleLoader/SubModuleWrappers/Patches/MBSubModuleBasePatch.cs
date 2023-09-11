@@ -309,8 +309,8 @@ namespace Bannerlord.ModuleLoader.SubModuleWrappers.Patches
                     postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(InitializeGameStarterPostfix)))
 
                 & harmony.TryPatch(
-                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnServiceRegistration)),
-                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnServiceRegistrationPostfix)))
+                    AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.OnServiceRegistration), logErrorInTrace: false),
+                    postfix: AccessTools2.Method(typeof(MBSubModuleBasePatch), nameof(OnServiceRegistrationPostfix), logErrorInTrace: false))
 
                 & harmony.TryPatch(
                     AccessTools2.Method(typeof(MBSubModuleBase), nameof(MBSubModuleBaseWrapper.DoLoading)),

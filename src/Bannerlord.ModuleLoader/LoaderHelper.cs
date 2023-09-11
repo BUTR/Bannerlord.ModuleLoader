@@ -115,7 +115,7 @@ namespace Bannerlord.ModuleLoader
             {
                 try
                 {
-                    return AccessTools2.GetTypesFromAssembly(a).Where(t => typeof(MBSubModuleBase).IsAssignableFrom(t));
+                    return AccessTools2.GetTypesFromAssembly(a).Where(t => !t.IsAbstract && typeof(MBSubModuleBase).IsAssignableFrom(t));
                 }
                 catch (ReflectionTypeLoadException e)
                 {
@@ -130,17 +130,17 @@ namespace Bannerlord.ModuleLoader
 
             foreach (var subModuleType in subModules)
             {
-                var constructor = AccessTools2.Constructor(subModuleType, Type.EmptyTypes);
+                var constructor = AccessTools2.Constructor(subModuleType, Type.EmptyTypes, logErrorInTrace: false);
                 if (constructor is null)
                 {
-                    Trace.TraceError("SubModule {0} is missing a default constructor!", subModuleType);
+                    Trace.TraceError("SubModule {0} is missing a default constructor! Assembly {1}", subModuleType, subModuleType.Assembly);
                     continue;
                 }
 
-                var constructorFunc = AccessTools2.GetDelegate<ConstructorDelegate>(constructor);
+                var constructorFunc = AccessTools2.GetDelegate<ConstructorDelegate>(constructor, logErrorInTrace: false);
                 if (constructorFunc is null)
                 {
-                    Trace.TraceError("SubModule {0}'s default constructor could not be converted to a delegate!", subModuleType);
+                    Trace.TraceError("SubModule {0}'s default constructor could not be converted to a delegate! Assembly {1}", subModuleType, subModuleType.Assembly);
                     continue;
                 }
 

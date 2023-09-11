@@ -34,11 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Metadata" Version="6.0.1" Pack="false" />
+    <PackageReference Include="System.Reflection.Metadata" Version="7.0.2" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="0.9.0" />
+    <PackageReference Include="NuGetizer" Version="0.9.1" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
   </ItemGroup>
 
   <ItemGroup>
