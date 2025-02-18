@@ -29,10 +29,6 @@ namespace Bannerlord.ModuleLoader
         {
             Trace.TraceInformation("Loading implementations...");
 
-            var implementationAssemblies = new List<Assembly>();
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToList();
-
             var thisAssembly = typeof(LoaderHelper).Assembly;
 
             var assemblyFile = new FileInfo(thisAssembly.Location);
@@ -50,7 +46,7 @@ namespace Bannerlord.ModuleLoader
             }
 
             var implementations = assemblyDirectory.GetFiles(filterWildcard);
-            if (implementations.Length == 0)
+            if (implementations.Length is 0)
             {
                 Trace.TraceError("No implementations found.");
                 yield break;
@@ -63,149 +59,138 @@ namespace Bannerlord.ModuleLoader
                 yield break;
             }
 
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
+                .Select(a => Path.GetFileNameWithoutExtension(a.Location))
+                .ToHashSet();
 
-            var implementationsFiles = implementations.Where(x => assemblies.All(a => Path.GetFileNameWithoutExtension(a.Location) != Path.GetFileNameWithoutExtension(x.Name)));
-            var implementationsWithVersions = GetImplementations(implementationsFiles).ToList();
-            if (implementationsWithVersions.Count == 0)
+            var implementationsFiles = implementations
+                .Where(x => !loadedAssemblies.Contains(Path.GetFileNameWithoutExtension(x.Name)))
+                .ToList();
+
+            var implementationsWithVersions = GetImplementations(implementationsFiles);
+            if (implementationsWithVersions.Count is 0)
             {
                 Trace.TraceError("No compatible implementations were found!");
                 yield break;
             }
 
-            var implementationsForGameVersion = ImplementationForGameVersion(gameVersion, implementationsWithVersions).ToList();
-            switch (implementationsForGameVersion.Count)
+            var matchingImplementations = implementationsWithVersions.Where(i => gameVersion.IsSame(i.Version)).ToList();
+
+            ImplementationFile? selectedImplementation;
+            switch (matchingImplementations.Count)
             {
                 case > 1:
-                {
                     Trace.TraceInformation("Found multiple matching implementations:");
-                    foreach (var (implementation1, version1) in implementationsForGameVersion)
-                        Trace.TraceInformation("Implementation {0} for game {1}.", implementation1.Name, version1);
+                    foreach (var impl in matchingImplementations)
+                        Trace.TraceInformation("Implementation {0} for game {1}", impl.Implementation.Name, impl.Version);
 
-
-                    Trace.TraceInformation("Loading the latest available.");
-
-                    var (implementation, version) = ImplementationLatest(implementationsForGameVersion);
-                    Trace.TraceInformation("Implementation {0} for game {1} is loaded.", implementation.Name, version);
-                    implementationAssemblies.Add(Assembly.LoadFrom(implementation.FullName));
+                    Trace.TraceInformation("Selecting the latest available implementation.");
+                    selectedImplementation = SelectLatestImplementation(matchingImplementations);
                     break;
-                }
-
                 case 1:
-                {
-                    Trace.TraceInformation("Found matching implementation. Loading it.");
-
-                    var (implementation, version) = implementationsForGameVersion[0];
-                    Trace.TraceInformation("Implementation {0} for game {1} is loaded.", implementation.Name, version);
-                    implementationAssemblies.Add(Assembly.LoadFrom(implementation.FullName));
+                    Trace.TraceInformation("Found one matching implementation.");
+                    selectedImplementation = matchingImplementations.First();
                     break;
-                }
-
-                case 0:
-                {
-                    Trace.TraceInformation("Found no matching implementations. Loading the latest available.");
-
-                    var (implementation, version) = ImplementationLatest(implementationsWithVersions);
-                    Trace.TraceInformation("Implementation {0} for game {1} is loaded.", implementation.Name, version);
-                    implementationAssemblies.Add(Assembly.LoadFrom(implementation.FullName));
+                default:
+                    Trace.TraceInformation("No exact match found. Selecting the latest available implementation.");
+                    selectedImplementation = SelectLatestImplementation(implementationsWithVersions);
                     break;
-                }
             }
 
-            var subModules = implementationAssemblies.SelectMany(a =>
+            if (selectedImplementation is null) yield break;
+
+            Trace.TraceInformation("Loading implementation {0} for game {1}", selectedImplementation.Implementation.Name, selectedImplementation.Version);
+
+            var loadedAssembly = Assembly.LoadFrom(selectedImplementation.Implementation.FullName);
+
+            var found = false;
+            foreach (var subModule in LoadSubModules(loadedAssembly))
             {
-                try
-                {
-                    return AccessTools2.GetTypesFromAssembly(a).Where(t => !t.IsAbstract && typeof(MBSubModuleBase).IsAssignableFrom(t));
-                }
-                catch (ReflectionTypeLoadException e)
-                {
-                    Trace.TraceError("Implementation {0} is not compatible with the current game! Exception: {1}", Path.GetFileName(a.Location), e);
-                    return e.Types.Where(t => typeof(MBSubModuleBase).IsAssignableFrom(t));
-                }
-
-            }).ToList();
-
-            if (subModules.Count == 0)
+                found = true;
+                yield return subModule;
+            }
+            if (!found)
                 Trace.TraceError("No implementation was initialized!");
 
-            foreach (var subModuleType in subModules)
+            Trace.TraceInformation("Finished loading implementations.");
+        }
+
+        private static ImplementationFile? SelectLatestImplementation(IEnumerable<ImplementationFile> implementations)
+        {
+            return implementations.MaxBy(x => x.Version, new ApplicationVersionComparer(), out _);
+        }
+
+        private static IEnumerable<MBSubModuleBase> LoadSubModules(Assembly assembly)
+        {
+            var subModuleTypes = AccessTools2.GetTypesFromAssembly(assembly)
+                .Where(t => !t.IsAbstract && typeof(MBSubModuleBase).IsAssignableFrom(t));
+
+            foreach (var type in subModuleTypes)
             {
-                var constructor = AccessTools2.Constructor(subModuleType, Type.EmptyTypes, logErrorInTrace: false);
+                var constructor = AccessTools2.Constructor(type, Type.EmptyTypes, logErrorInTrace: false);
                 if (constructor is null)
                 {
-                    Trace.TraceError("SubModule {0} is missing a default constructor! Assembly {1}", subModuleType, subModuleType.Assembly);
+                    Trace.TraceError("SubModule {0} is missing a default constructor! Assembly: {1}", type.FullName, type.Assembly.FullName);
                     continue;
                 }
 
                 var constructorFunc = AccessTools2.GetDelegate<ConstructorDelegate>(constructor, logErrorInTrace: false);
                 if (constructorFunc is null)
                 {
-                    Trace.TraceError("SubModule {0}'s default constructor could not be converted to a delegate! Assembly {1}", subModuleType, subModuleType.Assembly);
+                    Trace.TraceError("SubModule {0}'s default constructor could not be converted to a delegate! Assembly: {1}", type.FullName, assembly.FullName);
                     continue;
                 }
 
                 yield return constructorFunc();
             }
-
-            Trace.TraceInformation("Finished loading implementations.");
         }
 
-        private static IEnumerable<ImplementationFile> GetImplementations(IEnumerable<FileInfo> implementations)
+        private static List<ImplementationFile> GetImplementations(IEnumerable<FileInfo> implementations)
         {
+            var result = new List<ImplementationFile>();
             foreach (var implementation in implementations)
             {
-                bool found = false;
-                Trace.TraceInformation("Found implementation {0}.", implementation.Name);
+                Trace.TraceInformation("Found implementation: {0}", implementation.Name);
 
-                using var fs = File.OpenRead(implementation.FullName);
-                using var peReader = new PEReader(fs);
-                var mdReader = peReader.GetMetadataReader(MetadataReaderOptions.None);
-                foreach (var attr in mdReader.GetAssemblyDefinition().GetCustomAttributes().Select(ah => mdReader.GetCustomAttribute(ah)))
+                var gameVersion = ExtractGameVersion(implementation);
+                if (gameVersion is null)
                 {
-                    var ctorHandle = attr.Constructor;
-                    if (ctorHandle.Kind != HandleKind.MemberReference) continue;
-
-                    var container = mdReader.GetMemberReference((MemberReferenceHandle) ctorHandle).Parent;
-                    var name = mdReader.GetTypeReference((TypeReferenceHandle) container).Name;
-                    if (!string.Equals(mdReader.GetString(name), "AssemblyMetadataAttribute", StringComparison.Ordinal)) continue;
-
-                    var attributeReader = mdReader.GetBlobReader(attr.Value);
-                    attributeReader.ReadByte();
-                    attributeReader.ReadByte();
-                    var key = attributeReader.ReadSerializedString();
-                    var value = attributeReader.ReadSerializedString();
-                    if (string.Equals(key, "GameVersion", StringComparison.Ordinal))
-                    {
-                        if (!ApplicationVersion.TryParse(value, out var implementationGameVersion))
-                        {
-                            Trace.TraceError("Implementation {0} has invalid GameVersion AssemblyMetadataAttribute!", implementation.Name);
-                            continue;
-                        }
-
-                        found = true;
-                        yield return new(implementation, implementationGameVersion);
-                        break;
-                    }
+                    Trace.TraceError("Implementation {0} is missing or has an invalid GameVersion AssemblyMetadataAttribute!", implementation.Name);
+                    continue;
                 }
 
-                if (!found)
-                    Trace.TraceError("Implementation {0} is missing GameVersion AssemblyMetadataAttribute!", implementation.Name);
+                result.Add(new ImplementationFile(implementation, gameVersion));
             }
+            return result;
         }
 
-        private static IEnumerable<ImplementationFile> ImplementationForGameVersion(ApplicationVersion gameVersion, IEnumerable<ImplementationFile> implementations)
+        private static ApplicationVersion? ExtractGameVersion(FileInfo implementation)
         {
-            foreach (var (implementation, version) in implementations)
+            using var fs = File.OpenRead(implementation.FullName);
+            using var peReader = new PEReader(fs);
+            var mdReader = peReader.GetMetadataReader(MetadataReaderOptions.None);
+
+            foreach (var attr in mdReader.GetAssemblyDefinition().GetCustomAttributes().Select(ah => mdReader.GetCustomAttribute(ah)))
             {
-                if (gameVersion.IsSame(version))
-                {
-                    yield return new(implementation, version);
-                }
+                var ctorHandle = attr.Constructor;
+                if (ctorHandle.Kind is not HandleKind.MemberReference) continue;
+
+                var container = mdReader.GetMemberReference((MemberReferenceHandle) ctorHandle).Parent;
+                var name = mdReader.GetTypeReference((TypeReferenceHandle) container).Name;
+                if (!string.Equals(mdReader.GetString(name), "AssemblyMetadataAttribute", StringComparison.Ordinal)) continue;
+
+                var attributeReader = mdReader.GetBlobReader(attr.Value);
+                attributeReader.ReadByte(); // Skip prolog
+                attributeReader.ReadByte(); // Skip prolog
+                var key = attributeReader.ReadSerializedString();
+                var value = attributeReader.ReadSerializedString();
+
+                if (string.Equals(key, "GameVersion", StringComparison.Ordinal) && ApplicationVersion.TryParse(value, out var version))
+                    return version;
             }
-        }
-        private static ImplementationFile ImplementationLatest(IEnumerable<ImplementationFile> implementations)
-        {
-            return implementations.MaxBy(x => x.Version, new ApplicationVersionComparer(), out _);
+
+            return null;
         }
     }
 }

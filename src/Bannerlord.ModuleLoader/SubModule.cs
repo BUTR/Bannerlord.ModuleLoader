@@ -69,9 +69,8 @@ namespace Bannerlord.ModuleLoader
             var subModuleOrder = subModule.Tags.TryGetValue("LoaderSubModuleOrder", out var loaderSubModuleOrder) ? loaderSubModuleOrder : Array.Empty<string>();
             var indexLookup = subModuleOrder.Select((v, i) => (v, i)).ToDictionary(x => x.v, x => x.i);
 
-            var implementations = LoaderHelper.LoadAllImplementations(filter).OrderBy(x => indexLookup.TryGetValue(x.GetType().FullName, out var val) ? val : int.MaxValue).ToList();
-            var wrapped = implementations.Select(x => new MBSubModuleBaseWrapper(x)).ToList();
-            _subModules.AddRange(wrapped);
+            var implementations = LoaderHelper.LoadAllImplementations(filter).OrderBy(x => indexLookup.TryGetValue(x.GetType().FullName, out var val) ? val : int.MaxValue);
+            _subModules.AddRange(implementations.Select(x => new MBSubModuleBaseWrapper(x)));
         }
     }
 }

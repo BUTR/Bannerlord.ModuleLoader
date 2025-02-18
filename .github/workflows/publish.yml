@@ -58,7 +58,7 @@ jobs:
     needs: publish-moduleloader
     steps:
     - name: Setup
-      uses: butr/actions-common-setup@v2.0
+      uses: butr/actions-common-setup@v2
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
 

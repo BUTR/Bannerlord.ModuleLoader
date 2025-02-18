@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>BUTR</Authors>
   </PropertyGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Metadata" Version="7.0.2" Pack="false" />
+    <PackageReference Include="System.Reflection.Metadata" Version="9.0.2" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ILRepack" Version="2.1.0-beta1" PrivateAssets="All" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" PrivateAssets="All" />
+    <PackageReference Include="ILRepack" Version="2.0.37" PrivateAssets="all" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.37" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

@@ -10,9 +10,9 @@
     <!--Harmony Version-->
     <HarmonyVersion>2.2.2</HarmonyVersion>
     <!--BUTRShared Version-->
-    <BUTRSharedVersion>3.0.0.137</BUTRSharedVersion>
+    <BUTRSharedVersion>3.0.0.142</BUTRSharedVersion>
     <!--ModuleManager Version-->
-    <BUTRModuleManagerVersion>5.0.209</BUTRModuleManagerVersion>
+    <BUTRModuleManagerVersion>6.0.246</BUTRModuleManagerVersion>
     <!--Harmony Extensions Version-->
     <HarmonyExtensionsVersion>3.2.0.77</HarmonyExtensionsVersion>
   </PropertyGroup>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <!--SorceLink-->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <!--CI Builds-->
   <ItemGroup Condition="$(TargetFramework) == 'net472' AND $(OS) != 'Windows_NT'">
