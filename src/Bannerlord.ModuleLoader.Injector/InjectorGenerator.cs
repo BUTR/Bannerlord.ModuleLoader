@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using System;
 using System.Globalization;
@@ -48,6 +49,14 @@ public class InjectorGenerator : IIncrementalGenerator
         DiagnosticSeverity.Error,
         true);
 
+    private static readonly DiagnosticDescriptor MissingEmbeddedResource = new(
+        "INJ005",
+        "Missing Embedded Resource",
+        "Embedded resource '{0}' not found in assembly.",
+        "Generator",
+        DiagnosticSeverity.Error,
+        true);
+
     private static readonly Regex InvalidIdentifierCharacters = new("[^a-zA-Z0-9]", RegexOptions.Compiled);
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -74,8 +83,15 @@ public class InjectorGenerator : IIncrementalGenerator
 
             try
             {
-                var fullPath = Path.Combine(Path.GetDirectoryName(props.CsProjPath)!, props.OutputPath);
-                GenerateAssembly(fullPath, props.ModuleId);
+                var projectDir = Path.GetDirectoryName(props.CsProjPath);
+                if (projectDir is null)
+                {
+                    spc.ReportDiagnostic(Diagnostic.Create(ModuleGenerationFailed, Location.None, props.ModuleId, "Could not determine project directory"));
+                    return;
+                }
+
+                var fullPath = Path.Combine(projectDir, props.OutputPath);
+                GenerateAssembly(spc, fullPath, props.ModuleId);
                 spc.ReportDiagnostic(Diagnostic.Create(ModuleGenerationSuccessful, Location.None, props.ModuleId));
             }
             catch (Exception ex)
@@ -85,38 +101,47 @@ public class InjectorGenerator : IIncrementalGenerator
         });
     }
 
-    private static void GenerateAssembly(string fullPath, string moduleId)
+    private static void GenerateAssembly(SourceProductionContext spc, string fullPath, string moduleId)
     {
-        CopyEmbeddedResourceToFile("Bannerlord.ModuleLoader.dll", Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.dll"), stream => SetNames(moduleId, stream));
-        CopyEmbeddedResourceToFile("Bannerlord.ModuleLoader.pdb", Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.pdb"));
-    }
+        using var dllStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.dll");
+        using var pdbStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream("Bannerlord.ModuleLoader.pdb");
 
-    private static void CopyEmbeddedResourceToFile(string resourceName, string destinationPath, Func<Stream, Stream>? transform = null)
-    {
-        using var resourceStream = typeof(InjectorGenerator).Assembly.GetManifestResourceStream(resourceName);
-        if (resourceStream is null) return;
+        if (dllStream is null)
+        {
+            spc.ReportDiagnostic(Diagnostic.Create(MissingEmbeddedResource, Location.None, "Bannerlord.ModuleLoader.dll"));
+            return;
+        }
 
-        using var outputStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
-        using var finalStream = transform is not null ? transform(resourceStream) : resourceStream;
+        if (pdbStream is null)
+        {
+            spc.ReportDiagnostic(Diagnostic.Create(MissingEmbeddedResource, Location.None, "Bannerlord.ModuleLoader.pdb"));
+            return;
+        }
 
-        finalStream.CopyTo(outputStream);
-    }
+        using var modifiedAssembly = AssemblyDefinition.ReadAssembly(dllStream, new ReaderParameters
+        {
+            SymbolStream = pdbStream,
+            ReadSymbols = true
+        });
 
-    private static Stream SetNames(string moduleName, Stream? assemblyStream)
-    {
-        if (assemblyStream is null)
-            throw new ArgumentNullException(nameof(assemblyStream));
+        modifiedAssembly.Name.Name = moduleId;
 
-        using var modifiedAss = AssemblyDefinition.ReadAssembly(assemblyStream);
-        modifiedAss.Name.Name = moduleName;
+        var type = modifiedAssembly.MainModule.GetType("Bannerlord.ModuleLoader.SubModule");
+        type.Name = FlatName(moduleId);
 
-        var type = modifiedAss.MainModule.GetType("Bannerlord.ModuleLoader.SubModule");
-        type.Name = FlatName(moduleName);
+        var dllPath = Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.dll");
+        var pdbPath = Path.Combine(fullPath, $"Bannerlord.ModuleLoader.{moduleId}.pdb");
 
-        var ms = new MemoryStream();
-        modifiedAss.Write(ms, new WriterParameters { DeterministicMvid = true });
-        ms.Seek(0, SeekOrigin.Begin);
-        return ms;
+        using var outputDllStream = new FileStream(dllPath, FileMode.Create, FileAccess.Write);
+        using var outputPdbStream = new FileStream(pdbPath, FileMode.Create, FileAccess.Write);
+
+        modifiedAssembly.Write(outputDllStream, new WriterParameters
+        {
+            DeterministicMvid = true,
+            WriteSymbols = true,
+            SymbolStream = outputPdbStream,
+            SymbolWriterProvider = new PortablePdbWriterProvider()
+        });
     }
 
     private static string FlatNameRegex(string str) => InvalidIdentifierCharacters.Replace(str, "_");
