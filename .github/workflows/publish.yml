@@ -11,6 +11,11 @@ on:
       - 'build/**'
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
 env:
   # Disable the .NET logo in the console output.
   DOTNET_NOLOGO: true
@@ -40,8 +45,14 @@ jobs:
         msbuild src/Bannerlord.ModuleLoader/Bannerlord.ModuleLoader.csproj -t:Pack /p:configuration=Release /p:PackageOutputPath="./../../packages";
       shell: pwsh
 
+    - name: NuGet login (trusted publishing)
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: Aragas
+
     - name: Push to NuGet
-      run: dotnet nuget push "packages/**/*.nupkg" -k ${{secrets.NUGET_API_KEY}} -s https://www.nuget.org
+      run: dotnet nuget push "packages/**/*.nupkg" -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }} -s https://www.nuget.org
       shell: pwsh
 
     - name: Push to GPR
@@ -66,8 +77,14 @@ jobs:
       run: dotnet pack src/Bannerlord.ModuleLoader.Injector/Bannerlord.ModuleLoader.Injector.csproj --configuration Release -o "./packages";
       shell: pwsh
 
+    - name: NuGet login (trusted publishing)
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: Aragas
+
     - name: Push to NuGet
-      run: dotnet nuget push "./packages/*.nupkg" -k ${{secrets.NUGET_API_KEY}} -s https://www.nuget.org
+      run: dotnet nuget push "./packages/*.nupkg" -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }} -s https://www.nuget.org
       shell: pwsh
 
     - name: Push to GPR
